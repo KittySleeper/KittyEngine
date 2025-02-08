@@ -32,6 +32,7 @@ class StoryMenuState extends MusicBeatState
 		['Cocoa', 'Eggnog', 'Winter Horrorland'],
 		['Senpai', 'Roses', 'Thorns']
 	];
+
 	var curDifficulty:Int = 1;
 
 	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true];
@@ -117,8 +118,6 @@ class StoryMenuState extends MusicBeatState
 		grpLocks = new FlxTypedGroup<FlxSprite>();
 		add(grpLocks);
 
-		trace("Line 70");
-
 		for (i in 0...weekData.length)
 		{
 			var weekThing:MenuItem = new MenuItem(0, yellowBG.y + yellowBG.height + 10, i);
@@ -143,16 +142,12 @@ class StoryMenuState extends MusicBeatState
 			}
 		}
 
-		trace("Line 96");
-
 		grpWeekCharacters.add(new MenuCharacter(0, 100, 0.5, false));
 		grpWeekCharacters.add(new MenuCharacter(450, 25, 0.9, true));
 		grpWeekCharacters.add(new MenuCharacter(850, 100, 0.5, true));
 
 		difficultySelectors = new FlxGroup();
 		add(difficultySelectors);
-
-		trace("Line 124");
 
 		leftArrow = new FlxSprite(grpWeekText.members[0].x + grpWeekText.members[0].width + 10, grpWeekText.members[0].y + 10);
 		leftArrow.frames = ui_tex;
@@ -178,8 +173,6 @@ class StoryMenuState extends MusicBeatState
 		rightArrow.animation.play('idle');
 		difficultySelectors.add(rightArrow);
 
-		trace("Line 150");
-
 		add(yellowBG);
 		add(grpWeekCharacters);
 
@@ -193,8 +186,6 @@ class StoryMenuState extends MusicBeatState
 		add(txtWeekTitle);
 
 		updateText();
-
-		trace("Line 165");
 
 		super.create();
 	}
@@ -285,17 +276,12 @@ class StoryMenuState extends MusicBeatState
 			PlayState.isStoryMode = true;
 			selectedWeek = true;
 
-
-			PlayState.storyDifficulty = curDifficulty;
+			PlayState.storyDifficulty = CoolUtil.difficultyArray[curDifficulty].toLowerCase();
 
 			// adjusting the song name to be compatible
 			var songFormat = StringTools.replace(PlayState.storyPlaylist[0], " ", "-");
-			switch (songFormat) {
-				case 'Dad-Battle': songFormat = 'Dadbattle';
-				case 'Philly-Nice': songFormat = 'Philly';
-			}
 
-			var poop:String = Highscore.formatSong(songFormat, curDifficulty);
+			var poop:String = Highscore.formatSong(songFormat, CoolUtil.difficultyArray[curDifficulty].toLowerCase());
 			PlayState.sicks = 0;
 			PlayState.bads = 0;
 			PlayState.shits = 0;
@@ -339,10 +325,10 @@ class StoryMenuState extends MusicBeatState
 
 		// USING THESE WEIRD VALUES SO THAT IT DOESNT FLOAT UP
 		sprDifficulty.y = leftArrow.y - 15;
-		intendedScore = Highscore.getWeekScore(curWeek, curDifficulty);
+		intendedScore = Highscore.getWeekScore(curWeek, CoolUtil.difficultyArray[curDifficulty].toLowerCase());
 
 		#if !switch
-		intendedScore = Highscore.getWeekScore(curWeek, curDifficulty);
+		intendedScore = Highscore.getWeekScore(curWeek, CoolUtil.difficultyArray[curDifficulty].toLowerCase());
 		#end
 
 		FlxTween.tween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07);
@@ -397,7 +383,7 @@ class StoryMenuState extends MusicBeatState
 		txtTracklist.text += "\n";
 
 		#if !switch
-		intendedScore = Highscore.getWeekScore(curWeek, curDifficulty);
+		intendedScore = Highscore.getWeekScore(curWeek, CoolUtil.difficultyArray[curDifficulty].toLowerCase());
 		#end
 	}
 }

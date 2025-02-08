@@ -258,10 +258,6 @@ class ModchartState
 		#if sys
 		// pre lowercasing the song name (makeAnimatedLuaSprite)
 		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
-		switch (songLowercase) {
-			case 'dad-battle': songLowercase = 'dadbattle';
-			case 'philly-nice': songLowercase = 'philly';
-		}
 
 		var data:BitmapData = BitmapData.fromFile(Sys.getCwd() + "assets/data/" + songLowercase + '/' + spritePath + ".png");
 
@@ -292,10 +288,6 @@ class ModchartState
 		#if sys
 		// pre lowercasing the song name (makeLuaSprite)
 		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
-		switch (songLowercase) {
-			case 'dad-battle': songLowercase = 'dadbattle';
-			case 'philly-nice': songLowercase = 'philly';
-		}
 
 		var data:BitmapData = BitmapData.fromFile(Sys.getCwd() + "assets/data/" + songLowercase + '/' + spritePath + ".png");
 
@@ -351,7 +343,6 @@ class ModchartState
 
     function new()
     {
-        		trace('opening a lua state (because we are cool :))');
 				lua = LuaL.newstate();
 				LuaL.openlibs(lua);
 				trace("Lua version: " + Lua.version());
@@ -362,10 +353,6 @@ class ModchartState
 
 				// pre lowercasing the song name (new)
 				var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
-				switch (songLowercase) {
-					case 'dad-battle': songLowercase = 'dadbattle';
-					case 'philly-nice': songLowercase = 'philly';
-				}
 
 				var result = LuaL.dofile(lua, Paths.lua(songLowercase + "/modchart")); // execute le file
 	
@@ -894,14 +881,12 @@ class ModchartState
 
 				for (i in 0...PlayState.strumLineNotes.length) {
 					var member = PlayState.strumLineNotes.members[i];
-					trace(PlayState.strumLineNotes.members[i].x + " " + PlayState.strumLineNotes.members[i].y + " " + PlayState.strumLineNotes.members[i].angle + " | strum" + i);
 					//setVar("strum" + i + "X", Math.floor(member.x));
 					setVar("defaultStrum" + i + "X", Math.floor(member.x));
 					//setVar("strum" + i + "Y", Math.floor(member.y));
 					setVar("defaultStrum" + i + "Y", Math.floor(member.y));
 					//setVar("strum" + i + "Angle", Math.floor(member.angle));
 					setVar("defaultStrum" + i + "Angle", Math.floor(member.angle));
-					trace("Adding strum" + i);
 				}
     }
 

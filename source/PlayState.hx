@@ -74,7 +74,7 @@ class PlayState extends MusicBeatState
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
-	public static var storyDifficulty:Int = 1;
+	public static var storyDifficulty:String = "normal";
 	public static var weekSong:Int = 0;
 	public static var weekScore:Int = 0;
 	public static var shits:Int = 0;
@@ -96,8 +96,6 @@ class PlayState extends MusicBeatState
 	var kadeEngineWatermark:FlxText;
 	
 	#if windows
-	// Discord RPC variables
-	var storyDifficultyText:String = "";
 	var iconRPC:String = "";
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
@@ -254,10 +252,6 @@ class PlayState extends MusicBeatState
 
 		// pre lowercasing the song name (create)
 		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
-		switch (songLowercase) {
-			case 'dad-battle': songLowercase = 'dadbattle';
-			case 'philly-nice': songLowercase = 'philly';
-		}
 		
 		removedVideo = false;
 
@@ -271,17 +265,6 @@ class PlayState extends MusicBeatState
 		trace('Mod chart: ' + executeModchart + " - " + Paths.lua(songLowercase + "/modchart"));
 
 		#if windows
-		// Making difficulty text for Discord Rich Presence.
-		switch (storyDifficulty)
-		{
-			case 0:
-				storyDifficultyText = "Easy";
-			case 1:
-				storyDifficultyText = "Normal";
-			case 2:
-				storyDifficultyText = "Hard";
-		}
-
 		iconRPC = SONG.player2;
 
 		// To avoid having duplicate images in Discord assets
@@ -309,7 +292,7 @@ class PlayState extends MusicBeatState
 		detailsPausedText = "Paused - " + detailsText;
 
 		// Updating Discord Rich Presence.
-		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
+		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficulty + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
 		#end
 
 
@@ -331,8 +314,6 @@ class PlayState extends MusicBeatState
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
-
-		trace('INFORMATION ABOUT WHAT U PLAYIN WIT:\nFRAMES: ' + PlayStateChangeables.safeFrames + '\nZONE: ' + Conductor.safeZoneOffset + '\nTS: ' + Conductor.timeScale + '\nBotPlay : ' + PlayStateChangeables.botPlay);
 	
 		//dialogue shit
 		switch (songLowercase)
@@ -922,10 +903,6 @@ class PlayState extends MusicBeatState
 
 		generateSong(SONG.song);
 
-		trace('generated');
-
-		// add(strumLine);
-
 		camFollow = new FlxObject(0, 0, 1, 1);
 
 		camFollow.setPosition(camPos.x, camPos.y);
@@ -985,8 +962,7 @@ class PlayState extends MusicBeatState
 		// healthBar
 		add(healthBar);
 
-		// Add Kade Engine watermark
-		kadeEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + (Main.watermarks ? " - KE " + MainMenuState.kadeEngineVer : ""), 16);
+		kadeEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " - " + storyDifficulty.toUpperCase() + " - KE " + MainMenuState.kadeEngineVer, 16);
 		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
 		add(kadeEngineWatermark);
@@ -1049,11 +1025,6 @@ class PlayState extends MusicBeatState
 		if (loadRep)
 			replayTxt.cameras = [camHUD];
 
-		// if (SONG.song == 'South')
-		// FlxG.camera.alpha = 0.7;
-		// UI_camera.zoom = 1;
-
-		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
 		
 		trace('starting');
@@ -1220,10 +1191,6 @@ class PlayState extends MusicBeatState
 		#if windows
 		// pre lowercasing the song name (startCountdown)
 		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
-		switch (songLowercase) {
-			case 'dad-battle': songLowercase = 'dadbattle';
-			case 'philly-nice': songLowercase = 'philly';
-		}
 		if (executeModchart)
 		{
 			luaModchart = ModchartState.createModchartState();
@@ -1352,7 +1319,7 @@ class PlayState extends MusicBeatState
 
 		if (!paused)
 		{
-			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
+			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song, PlayState.SONG.mix), 1, false);
 		}
 
 		FlxG.sound.music.onComplete = endSong;
@@ -1405,7 +1372,7 @@ class PlayState extends MusicBeatState
 		
 		#if windows
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
+		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficulty + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
 		#end
 	}
 
@@ -1420,13 +1387,7 @@ class PlayState extends MusicBeatState
 
 		curSong = songData.song;
 
-		if (SONG.needsVoices)
-			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
-		else
-			vocals = new FlxSound();
-
-		trace('loaded vocals');
-
+		vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song, PlayState.SONG.mix));
 		FlxG.sound.list.add(vocals);
 
 		notes = new FlxTypedGroup<Note>();
@@ -1437,36 +1398,6 @@ class PlayState extends MusicBeatState
 		// NEW SHIT
 		noteData = songData.notes;
 
-		var playerCounter:Int = 0;
-
-		// Per song offset check
-		#if windows
-			// pre lowercasing the song name (generateSong)
-			var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
-				switch (songLowercase) {
-					case 'dad-battle': songLowercase = 'dadbattle';
-					case 'philly-nice': songLowercase = 'philly';
-				}
-
-			var songPath = 'assets/data/' + songLowercase + '/';
-			
-			for(file in sys.FileSystem.readDirectory(songPath))
-			{
-				var path = haxe.io.Path.join([songPath, file]);
-				if(!sys.FileSystem.isDirectory(path))
-				{
-					if(path.endsWith('.offset'))
-					{
-						trace('Found offset file: ' + path);
-						songOffset = Std.parseFloat(file.substring(0, file.indexOf('.off')));
-						break;
-					}else {
-						trace('Offset file not found. Creating one @: ' + songPath);
-						sys.io.File.saveContent(songPath + songOffset + '.offset', '');
-					}
-				}
-			}
-		#end
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
 		for (section in noteData)
 		{
@@ -1712,7 +1643,7 @@ class PlayState extends MusicBeatState
 			}
 
 			#if windows
-			DiscordClient.changePresence("PAUSED on " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), "Acc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
+			DiscordClient.changePresence("PAUSED on " + SONG.song + " (" + storyDifficulty + ") " + Ratings.GenerateLetterRank(accuracy), "Acc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
 			#end
 			if (!startTimer.finished)
 				startTimer.active = false;
@@ -1737,11 +1668,11 @@ class PlayState extends MusicBeatState
 			#if windows
 			if (startTimer.finished)
 			{
-				DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses, iconRPC, true, songLength - Conductor.songPosition);
+				DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficulty + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses, iconRPC, true, songLength - Conductor.songPosition);
 			}
 			else
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficulty + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
 			}
 			#end
 		}
@@ -1760,7 +1691,7 @@ class PlayState extends MusicBeatState
 		vocals.play();
 
 		#if windows
-		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
+		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficulty + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
 		#end
 	}
 
@@ -1901,7 +1832,7 @@ class PlayState extends MusicBeatState
 
 		if (songName != null)
 			songName.text = curSong + " (" + FlxStringUtil.formatTime(Conductor.songPosition / 1000) + "/" + FlxStringUtil.formatTime(FlxG.sound.music.length / 1000) + ")";
-		
+
 		scoreTxt.text = Ratings.CalculateRanking(songScore,songScoreDef,nps,maxNPS,accuracy);
 
 		var lengthInPx = scoreTxt.textField.length * scoreTxt.frameHeight; // bad way but does more or less a better job
@@ -2270,7 +2201,7 @@ class PlayState extends MusicBeatState
 
 			#if windows
 			// Game Over doesn't get his own variable because it's only used here
-			DiscordClient.changePresence("GAME OVER -- " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy),"\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
+			DiscordClient.changePresence("GAME OVER -- " + SONG.song + " (" + storyDifficulty + ") " + Ratings.GenerateLetterRank(accuracy),"\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
 			#end
 
 			// FlxG.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -2292,7 +2223,7 @@ class PlayState extends MusicBeatState
 		
 					#if windows
 					// Game Over doesn't get his own variable because it's only used here
-					DiscordClient.changePresence("GAME OVER -- " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy),"\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
+					DiscordClient.changePresence("GAME OVER -- " + SONG.song + " (" + storyDifficulty + ") " + Ratings.GenerateLetterRank(accuracy),"\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
 					#end
 		
 					// FlxG.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -2448,13 +2379,9 @@ class PlayState extends MusicBeatState
 						#end
 
 						dad.holdTimer = 0;
-	
-						if (SONG.needsVoices)
-							vocals.volume = 1;
-	
+						vocals.volume = 1;
+
 						daNote.active = false;
-
-
 						daNote.kill();
 						notes.remove(daNote, true);
 						daNote.destroy();
@@ -2591,10 +2518,6 @@ class PlayState extends MusicBeatState
 			// adjusting the highscore song name to be compatible
 			// would read original scores if we didn't change packages
 			var songHighscore = StringTools.replace(PlayState.SONG.song, " ", "-");
-			switch (songHighscore) {
-				case 'Dad-Battle': songHighscore = 'Dadbattle';
-				case 'Philly-Nice': songHighscore = 'Philly';
-			}
 
 			#if !switch
 			Highscore.saveScore(songHighscore, Math.round(songScore), storyDifficulty);
@@ -2626,10 +2549,9 @@ class PlayState extends MusicBeatState
 
 					FlxG.sound.music.stop();
 					vocals.stop();
-					if (FlxG.save.data.scoreScreen)
+					if (FlxG.save.data.scoreScreen) {
 						openSubState(new ResultsScreen());
-					else
-					{
+					} else {
 						FlxG.sound.playMusic(Paths.music('freakyMenu'));
 						FlxG.switchState(new MainMenuState());
 					}
@@ -2659,10 +2581,6 @@ class PlayState extends MusicBeatState
 					
 					// adjusting the song name to be compatible
 					var songFormat = StringTools.replace(PlayState.storyPlaylist[0], " ", "-");
-					switch (songFormat) {
-						case 'Dad-Battle': songFormat = 'Dadbattle';
-						case 'Philly-Nice': songFormat = 'Philly';
-					}
 
 					var poop:String = Highscore.formatSong(songFormat, storyDifficulty);
 
@@ -3173,7 +3091,6 @@ class PlayState extends MusicBeatState
 							{
 								//trace('ReplayNote ' + tmpRepNote.strumtime + ' | ' + tmpRepNote.direction);
 								var n = findByTime(daNote.strumTime);
-								trace(n);
 								if(n != null)
 								{
 									goodNoteHit(daNote);
@@ -3667,7 +3584,7 @@ class PlayState extends MusicBeatState
 		songLength = FlxG.sound.music.length;
 
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), "Acc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC,true,  songLength - Conductor.songPosition);
+		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficulty + ") " + Ratings.GenerateLetterRank(accuracy), "Acc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC,true,  songLength - Conductor.songPosition);
 		#end
 
 	}

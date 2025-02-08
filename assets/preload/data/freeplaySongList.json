@@ -1,0 +1,82 @@
+{
+    "songs": [
+        {
+            "name": "Tutorial",
+            "icon": "gf",
+            "week": 1,
+            "difficulties": ["easy", "normal", "hard"]
+        },
+        {
+            "name": "Bopeebo",
+            "icon": "dad",
+            "week": 1,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "Fresh",
+            "icon": "dad",
+            "week": 1,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "Dadbattle",
+            "icon": "dad",
+            "week": 1,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "Spookeez",
+            "icon": "spooky",
+            "week": 2,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "South",
+            "icon": "spooky",
+            "week": 2,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "Monster",
+            "icon": "monster",
+            "week": 2,
+            "difficulties": ["easy", "normal", "hard"]
+        },
+        {
+            "name": "Pico",
+            "icon": "pico",
+            "week": 3,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "Philly",
+            "icon": "pico",
+            "week": 3,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "Blammed",
+            "icon": "pico",
+            "week": 3,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "Satin Panties",
+            "icon": "mom",
+            "week": 4,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "High",
+            "icon": "mom",
+            "week": 4,
+            "difficulties": ["easy", "normal", "hard", "erect", "nightmare"]
+        },
+        {
+            "name": "MILF",
+            "icon": "mom",
+            "week": 4,
+            "difficulties": ["easy", "normal", "hard"]
+        }
+    ]
+}

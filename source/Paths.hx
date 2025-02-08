@@ -1,5 +1,6 @@
 package;
 
+import openfl.Assets;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.AssetType;
@@ -27,7 +28,7 @@ class Paths
 			if (OpenFlAssets.exists(levelPath, type))
 				return levelPath;
 
-			levelPath = getLibraryPathForce(file, "shared");
+			levelPath = getLibraryPathForce(file, "preload");
 			if (OpenFlAssets.exists(levelPath, type))
 				return levelPath;
 		}
@@ -55,7 +56,7 @@ class Paths
 		return getPath(file, type, library);
 	}
 
-	inline static public function lua(key:String,?library:String)
+	inline static public function lua(key:String, ?library:String)
 	{
 		return getPath('data/$key.lua', TEXT, library);
 	}
@@ -95,24 +96,24 @@ class Paths
 		return getPath('music/$key.$SOUND_EXT', MUSIC, library);
 	}
 
-	inline static public function voices(song:String)
+	inline static public function voices(song:String, mix:String = "")
 	{
 		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase();
-			switch (songLowercase) {
-				case 'dad-battle': songLowercase = 'dadbattle';
-				case 'philly-nice': songLowercase = 'philly';
-			}
-		return 'songs:assets/songs/${songLowercase}/Voices.$SOUND_EXT';
+		
+		if (mix != null && mix != "")
+			return 'songs:assets/songs/${songLowercase}/Voices-$mix.$SOUND_EXT';
+		else
+			return 'songs:assets/songs/${songLowercase}/Voices.$SOUND_EXT';
 	}
 
-	inline static public function inst(song:String)
+	inline static public function inst(song:String, mix:String = "")
 	{
 		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase();
-			switch (songLowercase) {
-				case 'dad-battle': songLowercase = 'dadbattle';
-				case 'philly-nice': songLowercase = 'philly';
-			}
-		return 'songs:assets/songs/${songLowercase}/Inst.$SOUND_EXT';
+
+		if (mix != null && mix != "")
+			return 'songs:assets/songs/${songLowercase}/Inst-$mix.$SOUND_EXT';
+		else
+			return 'songs:assets/songs/${songLowercase}/Inst.$SOUND_EXT';
 	}
 
 	inline static public function image(key:String, ?library:String)
@@ -133,5 +134,32 @@ class Paths
 	inline static public function getPackerAtlas(key:String, ?library:String)
 	{
 		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
+	}
+
+	inline static public function readPath(path:String = "images/")
+	{
+		var pathsLocated:Array<String> = [];
+
+		try
+		{
+			for (path in sys.FileSystem.readDirectory("./assets/" + path))
+				pathsLocated.push(path);
+		}
+		catch (e)
+		{
+			trace(e);
+		}
+
+		// try
+		// {
+		// 	for (path in sys.FileSystem.readDirectory("./mods/" + curMod + "/" + path))
+		// 		pathsLocated.push(path);
+		// }
+		// catch (e)
+		// {
+		// 	trace(e);
+		// }
+
+		return pathsLocated;
 	}
 }

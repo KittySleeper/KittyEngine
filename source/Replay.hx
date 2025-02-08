@@ -16,7 +16,7 @@ typedef ReplayJSON =
 	public var replayGameVer:String;
 	public var timestamp:Date;
 	public var songName:String;
-	public var songDiff:Int;
+	public var songDiff:String;
 	public var songNotes:Array<Dynamic>;
 	public var noteSpeed:Float;
 	public var isDownscroll:Bool;
@@ -34,7 +34,7 @@ class Replay
 		this.path = path;
 		replay = {
 			songName: "No Song Found", 
-			songDiff: 1,
+			songDiff: "normal",
 			noteSpeed: 1.5,
 			isDownscroll: false,
 			songNotes: [],
@@ -49,8 +49,6 @@ class Replay
 		var rep:Replay = new Replay(path);
 
 		rep.LoadFromJSON();
-
-		trace('basic replay data:\nSong Name: ' + rep.replay.songName + '\nSong Diff: ' + rep.replay.songDiff);
 
 		return rep;
 	}

@@ -21,6 +21,8 @@ typedef SwagSong =
 	var noteStyle:String;
 	var stage:String;
 	var validScore:Bool;
+
+	var mix:String;
 }
 
 class Song
@@ -37,6 +39,8 @@ class Song
 	public var noteStyle:String = '';
 	public var stage:String = '';
 
+	public var mix:String = 'erect';
+
 	public function new(song, notes, bpm)
 	{
 		this.song = song;
@@ -50,13 +54,7 @@ class Song
 
 		// pre lowercasing the folder name
 		var folderLowercase = StringTools.replace(folder, " ", "-").toLowerCase();
-		switch (folderLowercase) {
-			case 'dad-battle': folderLowercase = 'dadbattle';
-			case 'philly-nice': folderLowercase = 'philly';
-		}
 		
-		trace('loading ' + folderLowercase + '/' + jsonInput.toLowerCase());
-
 		var rawJson = Assets.getText(Paths.json(folderLowercase + '/' + jsonInput.toLowerCase())).trim();
 
 		while (!rawJson.endsWith("}"))

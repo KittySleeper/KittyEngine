@@ -35,26 +35,15 @@ class LoadReplayState extends MusicBeatState
         #if sys
 		controlsStrings = sys.FileSystem.readDirectory(Sys.getCwd() + "/assets/replays/");
         #end
-		trace(controlsStrings);
 
         controlsStrings.sort(Reflect.compare);
-
-        addWeek(['Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
-        addWeek(['Spookeez', 'South', 'Monster'], 2, ['spooky']);
-        addWeek(['Pico', 'Philly', 'Blammed'], 3, ['pico']);
-
-        addWeek(['Satin-Panties', 'High', 'Milf'], 4, ['mom']);
-        addWeek(['Cocoa', 'Eggnog', 'Winter-Horrorland'], 5, ['parents-christmas', 'parents-christmas', 'monster-christmas']);
-        
-        addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
-
 
         for(i in 0...controlsStrings.length)
         {
             var string:String = controlsStrings[i];
             actualNames[i] = string;
 			var rep:Replay = Replay.LoadReplay(string);
-            controlsStrings[i] = string.split("time")[0] + " " + (rep.replay.songDiff == 2 ? "HARD" : rep.replay.songDiff == 1 ? "EASY" : "NORMAL");
+            controlsStrings[i] = string.split("time")[0] + " " + rep.replay.songDiff.toUpperCase();
         }
 
         if (controlsStrings.length == 0)
@@ -108,27 +97,6 @@ class LoadReplayState extends MusicBeatState
         return week;
     }
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String)
-        {
-            songs.push(new FreeplayState.SongMetadata(songName, weekNum, songCharacter));
-        }
-    
-        public function addWeek(songs:Array<String>, weekNum:Int, ?songCharacters:Array<String>)
-        {
-            if (songCharacters == null)
-                songCharacters = ['bf'];
-    
-            var num:Int = 0;
-            for (song in songs)
-            {
-                addSong(song, weekNum, songCharacters[num]);
-    
-                if (songCharacters.length != 1)
-                    num++;
-            }
-        }
-    
-
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -153,13 +121,6 @@ class LoadReplayState extends MusicBeatState
 
 					// adjusting the song name to be compatible
 					var songFormat = StringTools.replace(PlayState.rep.replay.songName, " ", "-");
-					switch (songFormat) {
-						case 'Dad-Battle': songFormat = 'Dadbattle';
-						case 'Philly-Nice': songFormat = 'Philly';
-						// Replay v1.0 support
-						case 'dad-battle': songFormat = 'Dadbattle';
-						case 'philly-nice': songFormat = 'Philly';
-					}
 
 					var poop:String = Highscore.formatSong(songFormat, PlayState.rep.replay.songDiff);
 

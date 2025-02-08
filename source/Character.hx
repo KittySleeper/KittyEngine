@@ -124,7 +124,7 @@ class Character extends FlxSprite
 
 			case 'dad':
 				// DAD ANIMATION LOADING CODE
-				tex = Paths.getSparrowAtlas('characters/DADDY_DEAREST', 'shared');
+				tex = Paths.getSparrowAtlas('characters/DADDY_DEAREST');
 				frames = tex;
 				animation.addByPrefix('idle', 'Dad idle dance', 24);
 				animation.addByPrefix('singUP', 'Dad Sing Note UP', 24);
@@ -267,7 +267,7 @@ class Character extends FlxSprite
 				flipX = true;
 
 			case 'bf':
-				var tex = Paths.getSparrowAtlas('characters/BOYFRIEND', 'shared');
+				var tex = Paths.getSparrowAtlas('characters/BOYFRIEND');
 				frames = tex;
 
 				trace(tex.frames.length);

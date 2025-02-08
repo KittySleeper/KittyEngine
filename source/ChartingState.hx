@@ -117,6 +117,7 @@ class ChartingState extends MusicBeatState
 				noteStyle: 'normal',
 				stage: 'stage',
 				speed: 1,
+				mix: '',
 				validScore: false
 			};
 		}
